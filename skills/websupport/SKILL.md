@@ -30,13 +30,13 @@ Read from env vars (export them in your shell profile, e.g. `~/.zshenv` or
 
 If a call returns `ERROR: set WEBSUPPORT_API_KEY…`, open a new shell or
 `source` your profile first. **Never** hardcode the secret into files or
-commands — it is the HMAC key and is never transmitted. Generate/rotate keys in
-the Websupport Admin (Account → Security → API).
+commands — it is the HMAC key and is never transmitted. Generate/rotate keys at
+https://admin.websupport.sk/en/auth/apiKey .
 
 ## Quick start
 
 ```bash
-P=~/.claude/skills/websupport/scripts/ws_api.py   # or just `websupport` if install.sh ran
+P=~/.claude/skills/websupport/scripts/ws_api.py   # the client bundled with the skill
 python3 "$P" whoami                       # auth smoke test → your user (id, credit, billing)
 python3 "$P" check mojadomena.sk          # is it free? + price (no order placed)
 python3 "$P" prices --market sk           # live TLD price list
@@ -46,9 +46,9 @@ python3 "$P" dns example.sk               # DNS records of a zone (v1)
 python3 "$P" profiles                     # your registrant (domain) profiles
 ```
 
-> `websupport <cmd>` is a shorthand for `python3 <this script> <cmd>` — it lands
-> on your `PATH` (`~/bin`) when you run `install.sh`. Everything below uses the
-> explicit `python3 "$P"` form so it works with or without that command.
+> Snippets use the explicit `python3 "$P"` form. `$P` assumes a global install
+> (`~/.claude/skills/websupport`, e.g. `npx skills add kuzmany/websupport-skill -g`);
+> point it at the cloned `scripts/ws_api.py` if you installed into a project.
 
 ## Commands
 
@@ -84,6 +84,8 @@ python3 "$P" check mojadomena.sk --profile 12345     # confirm free + price (no 
 python3 "$P" post /v1/user/self/order --data '{"services":[{"type":"domain","domain":"mojadomena.sk","domainProfileId":12345,"period":1}]}'
 ```
 The order returns HTTP 201 with `item.id` (order id) and the final `priceWithVat`.
+(`--profile` does not change availability/price — it surfaces registrant-specific
+validation errors up front; the binding registrant check happens at order time.)
 
 Step B — pay (a SECOND confirmation). Re-show the order's `priceWithVat` and get a
 fresh OK before paying. `byCredit` silently drains account credit (no gateway prompt):
