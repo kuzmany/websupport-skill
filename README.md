@@ -28,6 +28,14 @@ into Claude Code (`.claude/skills/`). Claude Code is auto-detected — add
 npx skills add https://github.com/kuzmany/websupport-skill --skill websupport -g
 ```
 
+### …or just ask your agent to install it
+
+Paste this into Claude Code (or any agent that can run shell commands):
+
+> Install the Websupport skill for me: run
+> `npx skills add https://github.com/kuzmany/websupport-skill --skill websupport`
+> then tell me when it's ready.
+
 ## 2. Add your API keys (once)
 
 The skill calls Websupport's API, so it needs your key + secret.

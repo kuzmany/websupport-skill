@@ -42,7 +42,7 @@ import json
 import os
 import sys
 import time
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -85,6 +85,17 @@ def call(method, path, data=None, query=None, accept_language=None, retries=3):
     qs = urlencode(query) if query else ""
     url_path = path + ("?" + qs if qs else "")
     body = json.dumps(data).encode("utf-8") if data is not None else None
+
+    # Harden against a crafted `path` that redirects the request — and the
+    # API-key Authorization header — to another host. Example: path="@evil.com/x"
+    # makes API + path = "https://rest.websupport.sk@evil.com/x", whose real host
+    # is evil.com. Require a leading "/" and verify the final URL stays on the
+    # configured base host/scheme before anything is signed or sent.
+    if not path.startswith("/"):
+        sys.exit("ERROR: path must start with '/' (got %r)" % (path,))
+    _want, _got = urlparse(API), urlparse(API + url_path)
+    if (_got.scheme, _got.hostname) != (_want.scheme, _want.hostname):
+        sys.exit("ERROR: refusing request to unexpected host %r" % (_got.hostname,))
 
     last_err = None
     for attempt in range(retries):
