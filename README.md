@@ -16,11 +16,17 @@
 ## 1. Install (one line)
 
 ```bash
-npx skills add kuzmany/websupport-skill
+npx skills add https://github.com/kuzmany/websupport-skill --skill websupport
 ```
 
-Installs the skill into Claude Code via [skills.sh](https://skills.sh).
-Add `-g` to make it available in **every** project: `npx skills add kuzmany/websupport-skill -g`
+The [`skills`](https://www.skills.sh) CLI pulls the skill straight from GitHub
+into Claude Code (`.claude/skills/`). Claude Code is auto-detected — add
+`-a claude-code` to force it, or **`-g`** to install globally (available in
+**every** project):
+
+```bash
+npx skills add https://github.com/kuzmany/websupport-skill --skill websupport -g
+```
 
 ## 2. Add your API keys (once)
 

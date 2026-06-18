@@ -47,7 +47,7 @@ python3 "$P" profiles                     # your registrant (domain) profiles
 ```
 
 > Snippets use the explicit `python3 "$P"` form. `$P` assumes a global install
-> (`~/.claude/skills/websupport`, e.g. `npx skills add kuzmany/websupport-skill -g`);
+> (`~/.claude/skills/websupport`, e.g. `npx skills add https://github.com/kuzmany/websupport-skill --skill websupport -g`);
 > point it at the cloned `scripts/ws_api.py` if you installed into a project.
 
 ## Commands
